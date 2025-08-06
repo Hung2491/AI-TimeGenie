@@ -183,7 +183,7 @@ Widget _buildTaskCardHeader(String title) {
 Widget _buildTaskItem(TaskEntity item) {
   return Container(
     margin: const EdgeInsets.only(bottom: 8),
-    padding: const EdgeInsets.only(left: 5, top: 2, bottom: 2),
+    padding: const EdgeInsets.only(left: 10, top: 5, bottom: 5),
     decoration: BoxDecoration(
       color: AppColors.White000,
       borderRadius: BorderRadius.circular(10),

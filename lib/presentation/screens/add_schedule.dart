@@ -171,7 +171,12 @@ class _AddScheduleState extends State<AddSchedule> {
   Widget _buildScheduleList() {
     return Observer(
       builder: (_) => store.isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? Column(
+              children: [
+                200.height,
+                const Center(child: CircularProgressIndicator()),
+              ],
+            )
           : ListView.builder(
               shrinkWrap: true,
               itemCount: store.schedules.length,

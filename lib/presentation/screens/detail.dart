@@ -165,10 +165,10 @@ class _DetailScreenState extends State<DetailScreen> {
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 25),
                 child: Text('Bạn muốn hoàn thành công việc này?',
-                    style: CustomTextStyle.textNormal(context)
+                    style: CustomTextStyle.customTextStyle()
                         .copyWith(fontWeight: FontWeight.w500, color: AppColors.indigo)),
               ),
-              const Divider(height: 0, color: AppColors.indigo,),
+              const Divider(height: 0, color: AppColors.neutral200,),
               Row(
                 children: [
                   Expanded(
@@ -192,7 +192,7 @@ class _DetailScreenState extends State<DetailScreen> {
                     height: 45,
                     decoration: BoxDecoration(
                       border:
-                          Border.all(width: 0.5, color: AppColors.indigo),
+                          Border.all(width: 0.6, color: AppColors.neutral200),
                     ),
                   ),
                   Expanded(
@@ -208,7 +208,7 @@ class _DetailScreenState extends State<DetailScreen> {
                           'Hoàn thành',
                           style: CustomTextStyle.customTextStyle().copyWith(
                             fontWeight: FontWeight.w500,
-                            color: Colors.indigo,
+                            color: AppColors.neutral500,
                           ),
                         ),
                       ),
