@@ -5,7 +5,7 @@ import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:time_management_ai/constants/app_colors.dart';
 import 'package:time_management_ai/constants/texts.dart';
-import 'package:time_management_ai/di/service_locator.dart';
+import 'package:time_management_ai/di/injector.dart';
 import 'package:time_management_ai/domain/entities/task_entity.dart';
 import 'package:time_management_ai/domain/entities/task_input_entity.dart';
 import 'package:time_management_ai/presentation/screens/home.dart';
@@ -26,6 +26,7 @@ class _AddScheduleState extends State<AddSchedule> {
   SpeechToText _speechToText = SpeechToText();
   bool speechEnabled = false;
   String _lastWords = '';
+  String _currentLocaleId = 'vi-VN'; 
   int _maxLength = 100;
 
   @override
@@ -43,12 +44,10 @@ class _AddScheduleState extends State<AddSchedule> {
 
   void _initSpeech() async {
     speechEnabled = await _speechToText.initialize();
-    setState(() {});
   }
 
   void _startListening() async {
-    await _speechToText.listen(onResult: _onSpeechResult, localeId: 'vi_VN');
-
+    await _speechToText.listen(onResult: _onSpeechResult, localeId: _currentLocaleId, );
     setState(() {});
   }
 
@@ -174,7 +173,7 @@ class _AddScheduleState extends State<AddSchedule> {
           ? Column(
               children: [
                 200.height,
-                const Center(child: CircularProgressIndicator()),
+                const Center(child: CircularProgressIndicator(color: AppColors.neutral500,)),
               ],
             )
           : ListView.builder(

@@ -8,6 +8,10 @@ class ScheduleEntity {
   @JsonKey(name: 'title')
   final String title;
 
+  
+  @JsonKey(name: 'id')
+   String? id;
+
   @JsonKey(
     name: 'date',
     fromJson: _fromJsonDate,
@@ -19,6 +23,7 @@ class ScheduleEntity {
   final List<TaskEntity> tasks;
 
   ScheduleEntity({
+     this.id,
     required this.title,
     required this.date,
     required this.tasks,
@@ -26,6 +31,7 @@ class ScheduleEntity {
 
   factory ScheduleEntity.fromJson(Map<String, dynamic> json) =>
       _$ScheduleEntityFromJson(json);
+
 
   Map<String, dynamic> toJson() => _$ScheduleEntityToJson(this);
 

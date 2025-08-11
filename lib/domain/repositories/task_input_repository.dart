@@ -1,5 +1,5 @@
 import 'package:fpdart/fpdart.dart';
-import 'package:time_management_ai/domain/entities/failure.dart';
+import 'package:time_management_ai/utils/failure.dart';
 import 'package:time_management_ai/domain/entities/schedule_entity.dart';
 import 'package:time_management_ai/domain/entities/task_input_entity.dart';
 

@@ -8,6 +8,7 @@ part of 'schedule_entity.dart';
 
 ScheduleEntity _$ScheduleEntityFromJson(Map<String, dynamic> json) =>
     ScheduleEntity(
+      id: json['id'] as String?,
       title: json['title'] as String,
       date: ScheduleEntity._fromJsonDate(json['date'] as String),
       tasks: (json['tasks'] as List<dynamic>)
@@ -18,6 +19,7 @@ ScheduleEntity _$ScheduleEntityFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$ScheduleEntityToJson(ScheduleEntity instance) =>
     <String, dynamic>{
       'title': instance.title,
+      'id': instance.id,
       'date': ScheduleEntity._toJsonDate(instance.date),
       'tasks': instance.tasks,
     };

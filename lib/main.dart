@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:time_management_ai/di/service_locator.dart';
+import 'package:time_management_ai/di/injector.dart';
 import 'package:time_management_ai/presentation/screens/add_schedule.dart';
 import 'package:time_management_ai/presentation/screens/detail.dart';
 import 'package:time_management_ai/presentation/screens/home.dart';
@@ -7,7 +7,7 @@ import 'package:time_management_ai/presentation/screens/home.dart';
 Future<void> main() async {
   // await dotenv.load(fileName: ".env");
   WidgetsFlutterBinding.ensureInitialized();
-  await ServiceLocator.configureDependencies();
+  await Injector.configureDependencies();
  
   runApp(MyApp());
 }

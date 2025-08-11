@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:mobx/mobx.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:time_management_ai/domain/entities/schedule_entity.dart';
+import 'package:time_management_ai/domain/entities/task_entity.dart';
 import 'package:time_management_ai/domain/entities/task_input_entity.dart';
 import 'package:time_management_ai/domain/usecases/task_input_usecase.dart';
 
@@ -34,10 +35,6 @@ abstract class _AddScheduleStore with Store {
   @observable
   bool isLoading = false;
 
-  @action
-  void setInput(String value) {
-    input = value;
-  }
 
   @action
   Future<void> fetchTasks(TaskInputEntity params) async {
@@ -48,6 +45,7 @@ abstract class _AddScheduleStore with Store {
       (data) => schedules = ObservableList.of(data),
     );
     isLoading = false;
+
   }
 
   @action
@@ -55,7 +53,6 @@ abstract class _AddScheduleStore with Store {
     final prefs = await SharedPreferences.getInstance();
     final taskJsonList = tasks.map((e) => jsonEncode(e.toJson())).toList();
     await prefs.setStringList(_storageKey, taskJsonList);
-    // tasksList = ObservableList.of(tasks); // Cập nhật luôn store
     isSuccess = true;
   }
 
@@ -73,25 +70,23 @@ abstract class _AddScheduleStore with Store {
   }
 
   @action
-  Future<void> deleteTask(int index) async {
+  Future<void> deleteTask(String title) async {
     final prefs = await SharedPreferences.getInstance();
     final savedList = prefs.getStringList(_storageKey) ?? [];
 
-    if (index >= 0 && index < savedList.length) {
-      // Xoá phần tử tại vị trí index
-      savedList.removeAt(index);
+    final decodedList =
+        savedList.map((e) => ScheduleEntity.fromJson(json.decode(e))).toList();
 
-      // Cập nhật lại SharedPreferences
+    final indexToRemove = decodedList.indexWhere((item) => item.title == title);
+
+    if (indexToRemove != -1) {
+      savedList.removeAt(indexToRemove);
+
       await prefs.setStringList(_storageKey, savedList);
 
-      // Cập nhật lại tasksList trong store
-      final updatedTasks = savedList
-          .map((e) => ScheduleEntity.fromJson(json.decode(e)))
-          .toList();
-
-      tasksList = updatedTasks;
+      tasksList = decodedList..removeAt(indexToRemove);
     } else {
-      print('Index out of range');
+      print('Không tìm thấy task với title: $title');
     }
   }
 
@@ -111,6 +106,7 @@ abstract class _AddScheduleStore with Store {
           title: schedule.title,
           date: schedule.date,
           tasks: filteredTasks,
+          id: schedule.id,
         );
       }).toList();
 
@@ -124,28 +120,63 @@ abstract class _AddScheduleStore with Store {
     }
   }
 
-
   @action
   Future<void> addTask(List<ScheduleEntity> newTasks) async {
     final prefs = await SharedPreferences.getInstance();
 
-    // Lấy danh sách hiện tại (nếu có)
     final savedList = prefs.getStringList(_storageKey) ?? [];
 
-    // Chuyển các task mới thành json string
     final newTaskJsonList =
         newTasks.map((e) => jsonEncode(e.toJson())).toList();
 
-    // Gộp vào danh sách cũ
     final updatedList = [...savedList, ...newTaskJsonList];
 
-    // Lưu lại vào SharedPreferences
+    // Lưu
     await prefs.setStringList(_storageKey, updatedList);
 
-    // Cập nhật luôn store
+    // Cập nhật
     tasksList = updatedList
         .map((e) => ScheduleEntity.fromJson(json.decode(e)))
         .toList();
-         isSuccess = true;
+    isSuccess = true;
+  }
+
+  @action
+  Future<void> updateTaskCompletion(String taskId, bool isCompleted) async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedList = prefs.getStringList(_storageKey);
+
+    if (savedList != null) {
+      final updatedScheduleList = savedList.map((jsonString) {
+        final schedule = ScheduleEntity.fromJson(json.decode(jsonString));
+
+        final updatedTasks = schedule.tasks.map((task) {
+          if (task.id == taskId) {
+            return TaskEntity(
+              id: task.id,
+              time: task.time,
+              description: task.description,
+              isCompleted: isCompleted, 
+            );
+          }
+          return task;
+        }).toList();
+
+        return ScheduleEntity(
+          title: schedule.title,
+          date: schedule.date,
+          tasks: updatedTasks,
+          id: schedule.id,
+        );
+      }).toList();
+
+      final updatedJsonList = updatedScheduleList
+          .map((schedule) => jsonEncode(schedule.toJson()))
+          .toList();
+
+      await prefs.setStringList(_storageKey, updatedJsonList);
+
+      tasksList = updatedScheduleList;
+    }
   }
 }

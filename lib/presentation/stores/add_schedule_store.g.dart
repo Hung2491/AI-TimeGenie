@@ -135,8 +135,8 @@ mixin _$AddScheduleStore on _AddScheduleStore, Store {
       AsyncAction('_AddScheduleStore.deleteTask', context: context);
 
   @override
-  Future<void> deleteTask(int index) {
-    return _$deleteTaskAsyncAction.run(() => super.deleteTask(index));
+  Future<void> deleteTask(String title) {
+    return _$deleteTaskAsyncAction.run(() => super.deleteTask(title));
   }
 
   late final _$deleteTaskByIdAsyncAction =
@@ -155,18 +155,13 @@ mixin _$AddScheduleStore on _AddScheduleStore, Store {
     return _$addTaskAsyncAction.run(() => super.addTask(newTasks));
   }
 
-  late final _$_AddScheduleStoreActionController =
-      ActionController(name: '_AddScheduleStore', context: context);
+  late final _$updateTaskCompletionAsyncAction =
+      AsyncAction('_AddScheduleStore.updateTaskCompletion', context: context);
 
   @override
-  void setInput(String value) {
-    final _$actionInfo = _$_AddScheduleStoreActionController.startAction(
-        name: '_AddScheduleStore.setInput');
-    try {
-      return super.setInput(value);
-    } finally {
-      _$_AddScheduleStoreActionController.endAction(_$actionInfo);
-    }
+  Future<void> updateTaskCompletion(String taskId, bool isCompleted) {
+    return _$updateTaskCompletionAsyncAction
+        .run(() => super.updateTaskCompletion(taskId, isCompleted));
   }
 
   @override
